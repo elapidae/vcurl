@@ -1,0 +1,34 @@
+vcurl -- wrapper for libcurl library.
+
+"V-technologis" used:
+
+1.  Must be included vlibs2 repo (github.com/elapidae/vlibs2)
+
+2.  in cmake: use 'include( "path-to-vcurl/vcurl.cmake" )'
+    in qmake: use 'include( path-to-vcurl/vcurl.pri )'
+
+
+3. in code you can read something similar:
+```
+#include "vcurl.h"
+
+...
+
+    vcurl url;
+    std::string res;
+    try
+    {
+        res = url.exec( "https://www.examle.com" );
+    }
+    catch( const vcurl::error& e )
+    {
+        if ( e.code() == vcurl::error::SOME_ERROR )
+            ...
+        else if ( e.code() == vcurl::error::SOME_OTHER_ERROR )
+            ...
+        else throw;
+    }
+```
+
+On 2020-05-20 elapidae thinks about functionallity of this library, it is C-cool.
+
