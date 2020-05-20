@@ -14,6 +14,7 @@
 #include <chrono>
 #include <memory>
 #include <stdexcept>
+#include <ostream>
 
 //  Try not use curl as-is, only for CURLcode, because this enum is very big :(.
 #include <curl/curl.h>
@@ -72,5 +73,8 @@ private:
     std::string _where;
 };
 //=======================================================================================
+std::ostream& operator << ( std::ostream& os, const vcurl& url );
+//=======================================================================================
+
 
 #endif // VCURL_H
