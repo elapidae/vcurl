@@ -27,21 +27,48 @@ class vcurl_test: public testing::Test
 //=======================================================================================
 TEST_F( vcurl_test, simple_example )
 {
+    auto addr = "http://www.example.com";
+    std::string res;
+
+    //  May use standard static method.
+    res = vcurl::one_shot( addr );
+
+    //  Using object we can save state of query and ask some things.
     vcurl url;
-    auto res = url.exec( "https://www.example.com" );
-    vdeb << res;
+
+    //  May use exec() method.
+    res = url.exec( addr );
+
+    //  May set url direct
+    url.url( addr );
+    res = url.exec();
+
+    EXPECT_EQ( res, url.result() );
+
+    // implicit convertion for result.
+    std::string res2;
+    res2 = url;
+    EXPECT_EQ( res, res2 );
 }
 //=======================================================================================
-TEST_F( vcurl_test, bad_example )
+TEST_F( vcurl_test, resolv_err_example )
 {
     try {
         vcurl url;
         auto res = url.exec( "http://www.any-bred.com1" );
         vdeb << res;
     } catch ( const vcurl::error &e ) {
-        if ( e.code() == vcurl::error::COULDNT_RESOLVE_HOST ) return;
-        throw;
+        vdeb << e.what();
     }
+}
+//=======================================================================================
+TEST_F( vcurl_test, info )
+{
+    vcurl url( "http://example.com" );
+    vdeb << "eff url:" << url.effective_url();
+    vdeb << "total time us:" << url.total_time();
+    vdeb << "total time  s:" << url.total_time_seconds();
+    vdeb << "con type: " << url.content_type();
 }
 //=======================================================================================
 //  EXPECT_TRUE
