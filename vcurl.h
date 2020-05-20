@@ -12,6 +12,9 @@
 #include <memory>
 #include <stdexcept>
 
+//  Try not use curl as-is, only for CURLcode, because this enum is very big :(.
+#include <curl/curl.h>
+
 //=======================================================================================
 class vcurl final
 {
@@ -38,16 +41,11 @@ private:
 class vcurl::error : public std::runtime_error
 {
 public:
-    enum Code
-    {
-        PHONY,  // Reason in text.
-        COULDNT_RESOLVE_HOST
-    };
-    error( const std::string& msg, Code c = PHONY );
-    Code code() const;
+    error( const std::string& msg, CURLcode c = CURLE_OK );
+    CURLcode code() const;
 
 private:
-    Code _code;
+    CURLcode _code;
 };
 //=======================================================================================
 

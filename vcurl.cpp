@@ -14,22 +14,12 @@
 #include "vcat.h"
 
 //=======================================================================================
-static vcurl::error::Code to_err_code( CURLcode c )
-{
-    using NS = vcurl::error;
-    switch (c)
-    {
-    case CURLE_COULDNT_RESOLVE_HOST: return NS::COULDNT_RESOLVE_HOST;
-    }
-    throw vcurl::error( vcat("Cannot resolve code ",c) );
-}
-//=======================================================================================
-vcurl::error::error( const std::string& msg, Code c )
+vcurl::error::error( const std::string& msg, CURLcode c )
     : std::runtime_error( msg )
     , _code( c )
 {}
 //=======================================================================================
-vcurl::error::Code vcurl::error::code() const
+CURLcode vcurl::error::code() const
 {
     return _code;
 }
@@ -114,7 +104,7 @@ void vcurl::_pimpl::perform()
     if ( res == CURLE_OK ) return;
 
     vcat msg("Perform error [",res,"]: '",err_buffer,"'.");
-    throw error( msg, to_err_code(res) );
+    throw error( msg, res );
 }
 //=======================================================================================
 size_t vcurl::_pimpl::s_write_data(void *buffer, size_t size, size_t nmemb, void *userp)
